@@ -17,11 +17,24 @@
   <body>
 
     <?php
-      require_once('./Entity/Movie.php');
 
-      require_once('./Controller/MovieController.php');
+      function loadClass(string $class){
+        if ($class === "DotEnv") {
+          require_once("./config/$class.php"); 
+        } else if (str_contains($class, "Controller")){
+          require_once("./Controller/$class.php");
+        } else {
+          require_once("./Entity/$class.php");
+        }
+      }
+
+      spl_autoload_register("loadClass");
+
       $movieController = new MovieController();
       $movies = $movieController->getAll();
+
+      $categoryController = new CategoryController();
+      $categories = $categoryController->getAll();
 
       /*$movie = new Movie([
         "id" => 1,
@@ -76,13 +89,10 @@
     <main>
       <h1>My Movies</h1>
       <h3 class="slogan">Découvrez et partagez des films !</h3>
-      <div>
+      <div class=" w-100 logo text-center">
         <img
-          class="logo"
           src="./images/camera.png"
           alt="Logo My Movies"
-          width="200px"
-          height="auto"
         />
       </div>
 
@@ -92,7 +102,9 @@
       <section class="container d-flex justify-content-center">
 
       <?php
-      foreach ($movies as $movie):?>
+      foreach ($movies as $movie):
+        $category = $categoryController->get($movie->getCategory_id());
+      ?>
         
         <div class="card m-3" style="width: 18rem">
           <img
@@ -104,6 +116,7 @@
             <h5 class="card-title"><?php echo $movie->getTitle(); ?></h5>
             <h6 class="card-subtitle mb-2 text-muted"><?php echo $movie->getDirector(); ?></h6>
             <p class="card-text"><?php echo $movie->getDescription(); ?></p>
+            <footer class="blockquote-footer" style="color: <?=$category->getColor()?>"><?php echo $category->getName(); ?></footer>
             <a href="#" class="btn btn-warning"
               ><svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +138,7 @@
                 />
               </svg>
             </a>
-            <a href="#" class="btn btn-danger">
+            <a href="./views/delete.php?id=<?= $movie->getId(); ?>" class="btn btn-danger">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

@@ -17,7 +17,7 @@
   <body>
 
     <?php
-
+      session_start();
       function loadClass(string $class){
         if ($class === "DotEnv") {
           require_once("./config/$class.php"); 
@@ -35,16 +35,6 @@
 
       $categoryController = new CategoryController();
       $categories = $categoryController->getAll();
-
-      /*$movie = new Movie([
-        "id" => 1,
-        "title" => "Avatar",
-        "description" => "Un film avec des gens bleus :)",
-        "image_url" => "https://m.media-amazon.com/images/I/71kiTUly50L._AC_SY679_.jpg",
-        "release_date" => "2009/12/16",
-        "director" => "James Cameron",
-        "category_id" => 3
-      ]);*/
     ?>
 
     <header>
@@ -70,17 +60,44 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#"
-                  >Accueil</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./views/create.php">Publier</a>
-              </li>
-            </ul>
+          <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./views/create.php">Publier</a>
+                </li>
+              </ul>
+              <ul class="navbar-nav">
+                <?php
+                  if ($_SESSION && $_SESSION["username"]) {
+                    echo "<li class='nav-item'>
+                            <span class='nav-link active'> 
+                              Bienvenue {$_SESSION["username"]} !
+                            </span>
+                          </li>
+                          <li class='nav-item'>
+                            <a class='nav-link' href='./views/logout.php'>
+                              Déconnexion
+                            </a>
+                          </li>";
+                  } else {
+                    echo "<li class='nav-item'>
+                            <a class='nav-link' href='./views/register.php'>
+                              S'inscrire
+                            </a>
+                          </li>
+                          <li class='nav-item'>
+                            <a class='nav-link' href='./views/login.php'>
+                              Se connecter
+                            </a>
+                          </li>";
+                  }
+                ?>
+
+              </ul>
+
           </div>
         </div>
       </nav>
@@ -89,7 +106,7 @@
     <main>
       <h1>My Movies</h1>
       <h3 class="slogan">Découvrez et partagez des films !</h3>
-      <div class=" w-100 logo text-center">
+      <div class=" w-100 h-100 mb-3 logo text-center">
         <img
           src="./images/camera.png"
           alt="Logo My Movies"
@@ -104,6 +121,7 @@
       <?php
       foreach ($movies as $movie):
         $category = $categoryController->get($movie->getCategory_id());
+        $releaseDate = new DateTime($movie->getRelease_date());
       ?>
         
         <div class="card m-3" style="width: 18rem">
@@ -114,10 +132,10 @@
           />
           <div class="card-body">
             <h5 class="card-title"><?php echo $movie->getTitle(); ?></h5>
-            <h6 class="card-subtitle mb-2 text-muted"><?php echo $movie->getDirector(); ?></h6>
+            <h6 class="card-subtitle mb-2 text-muted"><?php echo $releaseDate->format("d/m/Y"); ?></h6>
             <p class="card-text"><?php echo $movie->getDescription(); ?></p>
             <footer class="blockquote-footer" style="color: <?=$category->getColor()?>"><?php echo $category->getName(); ?></footer>
-            <a href="#" class="btn btn-warning"
+            <a href="./views/update.php?id=<?= $movie->getId(); ?>" class="btn btn-warning"
               ><svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

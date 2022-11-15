@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Movies - Publier un film</title>
+    <title>My Movies - Modifier un film</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -65,43 +65,44 @@
       }
 
       spl_autoload_register("loadClass");
-
+    $movieController = new MovieController();
     $categoryController = new CategoryController();
     $categories = $categoryController->getAll();
+    
+    $movie = $movieController->get($_GET["id"]);
 
     if ($_POST){
-      $movieController = new MovieController();
-      $newMovie = new Movie($_POST);
-      $movieController->create($newMovie);
+      $movie->hydrate($_POST);
+      $movieController->update($movie);
       echo "<script>window.location='../index.php'</script>";
     }
   ?>
 
     <main>
-      <h3>Publier un nouveau film</h3>
+      <h3>Modifier le film <?= $movie->getTitle(); ?></h3>
       <form class="container-fluid w-50" method="POST" action="">
 
         <label class="form-label" for="title">Titre</label>
-        <input class="form-control" type="text" id="title" name="title" placeholder="Le titre du film">
+        <input class="form-control" type="text" id="title" name="title" value="<?= $movie->getTitle(); ?>" placeholder="Le titre du film">
       
         <label class="form-label" for="description">description</label>
-        <textarea class="form-control" name="description" id="description" cols="30" rows="10" placeholder="Le résumé du film"></textarea>
+        <textarea class="form-control" name="description" id="description" cols="30" rows="10" placeholder="Le résumé du film"><?= $movie->getDescription(); ?></textarea>
       
         <label class="form-label" for="image_url">Image</label>
-        <input class="form-control" type="url" name="image_url" id="image_url" placeholder="L'URL de l'image du film">
+        <input class="form-control" type="url" name="image_url" id="image_url" value="<?= $movie->getImage_url(); ?>"placeholder="L'URL de l'image du film">
 
         <label class="form-label" for="release_date">Date de sortie</label>
-        <input class="form-control" type="date" name="release_date" id="release_date">
+        <input class="form-control" type="date" name="release_date" value="<?= $movie->getRelease_date(); ?>"id="release_date">
 
         <label class="form-label" for="director">Réalisateur</label>
-        <input type="text" name="director" id="director" placeholder="Le réalisateur du film">
+        <input type="text" name="director" id="director" value="<?= $movie->getDirector(); ?>"placeholder="Le réalisateur du film">
 
         <label class="form-label" for="category_id">Catégorie</label>
         <select class="form-select" name="category_id" id="category_id">
           <option value="" selected>--Sélectionnez une catégorie--</option>
           <?php
             foreach ($categories as $category) : ?>
-              <option value="<?= $category->getId(); ?>"><?= $category->getName();?></option>
+              <option <?= $category->getId() === $movie->getCategory_id() ? "selected" : "" ?> value="<?= $category->getId(); ?>"><?= $category->getName();?></option>
             }
           <?php endforeach ?>
         </select>

@@ -48,8 +48,8 @@
     public function create(Category $newCategory): void
     {
       $req = $this->pdo->prepare("INSERT INTO `category` (name, color) VALUES (:name, :color)");
-      $req->bindParam(":name", $newCategory->getName(), PDO::PARAM_STR);
-      $req->bindParam(":color", $newCategory->getColor(), PDO::PARAM_STR);
+      $req->bindValue(":name", $newCategory->getName(), PDO::PARAM_STR);
+      $req->bindValue(":color", $newCategory->getColor(), PDO::PARAM_STR);
       $req->execute();
     }
 

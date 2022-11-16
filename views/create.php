@@ -16,44 +16,8 @@
 
   <body>
 
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand title-nav" href="../index.php">
-              <img
-                src="../images/camera.png"
-                alt="Logo My Movies"
-                width="50px"
-                height="auto"
-              />
-            My Movies
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="../index.php">Accueil</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="#">Publier</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
-
-    <?php
+  <?php
+      session_start();
       function loadClass(string $class){
         if ($class === "DotEnv") {
           require_once("../config/$class.php"); 
@@ -76,6 +40,72 @@
       echo "<script>window.location='../index.php'</script>";
     }
   ?>
+
+  <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand title-nav" href="#">
+            <img
+              src="../images/camera.png"
+              alt="Logo My Movies"
+              width="50px"
+              height="auto"
+            />
+            My Movies
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="../index.php">Accueil</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="../views/create.php">Publier</a>
+                </li>
+              </ul>
+              <ul class="navbar-nav">
+                <?php
+                  if ($_SESSION && $_SESSION["username"]) {
+                    echo "<li class='nav-item'>
+                            <span class='nav-link active'> 
+                              Bienvenue {$_SESSION["username"]} !
+                            </span>
+                          </li>
+                          <li class='nav-item'>
+                            <a class='nav-link' href='../views/logout.php'>
+                              Déconnexion
+                            </a>
+                          </li>";
+                  } else {
+                    echo "<li class='nav-item'>
+                            <a class='nav-link' href='../views/register.php'>
+                              S'inscrire
+                            </a>
+                          </li>
+                          <li class='nav-item'>
+                            <a class='nav-link' href='../views/login.php'>
+                              Se connecter
+                            </a>
+                          </li>";
+                  }
+                ?>
+
+              </ul>
+
+          </div>
+        </div>
+      </nav>
+    </header>
 
     <main>
       <h3>Publier un nouveau film</h3>
@@ -121,4 +151,5 @@
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"
   ></script>
+  <script src="../scripts/script.js"></script>
 </html>

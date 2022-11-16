@@ -63,7 +63,7 @@
           <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                  <a class="nav-link active" aria-current="page" href="../index.php">Accueil</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="./views/create.php">Publier</a>
@@ -182,7 +182,9 @@
 
     </main>
 
-    <footer></footer>
+    <footer>
+      <a class="btn btn-dark" href="index.php">Haut de page</a>
+    </footer>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
